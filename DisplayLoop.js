@@ -1,12 +1,14 @@
 /*
-  GameLoop.js
+  DisplayLoop.js
 
   System to update a game, or similarly animated Web app, periodically.
-  Driven by , calls supplied function.
+  Driven by requestAnimationFrame, calls supplied function.
   NOTES:
-  1. If setLoopFunction() is called with a function argument, that function
+  1. If setUpdateFunction() is called with a function argument, that function
      will be called as often as the system's requestAnimationFrame() allows.
      You can also provide null as an argument.
+  2. The update function will be passed the current date/time (in seconds) as an
+     argument.
 */
 
 
@@ -19,12 +21,12 @@ var εδ = εδ || { };
 //=============================================================================
 
 
-εδ.gameLoop =
+εδ.displayLoop =
     (function()
      {
     //-------------------------------------------------------------------------
 
-         var loopFunction;
+         var updateFunction;
 
     //=========================================================================
 
@@ -69,18 +71,18 @@ var εδ = εδ || { };
          
     //=========================================================================
 
-         function setLoopFunction( func )
+         function setUpdateFunction( func )
          {
-             loopFunction = func;
+             updateFunction = func;
          }
          
     //=========================================================================
 
          function doLoop( nowMillis )
          {
-             if ( typeof loopFunction === "function" )
+             if ( typeof updateFunction === "function" )
              {
-                 loopFunction( nowMillis / 1000.0 );
+                 updateFunction( nowMillis / 1000.0 );
              }
              requestAnimationFrame( doLoop );
          }
@@ -92,7 +94,7 @@ var εδ = εδ || { };
     //=========================================================================
 
         return {
-            setLoopFunction: setLoopFunction
+            setUpdateFunction: setUpdateFunction
         };
          
     //-------------------------------------------------------------------------
