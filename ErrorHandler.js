@@ -60,33 +60,31 @@ if (!window.console) (function() {
 
         var messageElement;
 
-    //-------------------------------------------------------------------------
+    //=========================================================================
 
         function setMessageElement( errorMessageElement )
         {
             messageElement = errorMessageElement;
             clearError( );
             window.onerror = reportJsError;
-            if ( messageElement )
-            {
-                $(messageElement).ajaxError( reportAjaxError );
-            }
+            $(document).on( 'ajaxError', reportAjaxError );
         }
         
-    //-------------------------------------------------------------------------
+    //=========================================================================
 
         function reportError( errorMsg )
         {
             console.log( errorMsg );
             if ( messageElement )
             {
+                errorMsg = errorMsg.replace( '\n', '<br />' );
                 $(messageElement).html( errorMsg );
                 $(messageElement).show( );
                 window.scrollTo( 0, 0 );
             }
         }
 
-    //.........................................................................
+    //-------------------------------------------------------------------------
 
         function clearError( )
         {
@@ -97,30 +95,33 @@ if (!window.console) (function() {
             }
         }
         
-    //.........................................................................
+    //-------------------------------------------------------------------------
 
         function reportJsError( errorMsg, url, line )
         {
             var msg = 'A JavaScript error occurred at ' +
-                url + ' (' + line + ')<br />' +
+                url + ' (' + line + ')\n' +
                 errorMsg;
             reportError( msg );
         }
 
-    //.........................................................................
+    //-------------------------------------------------------------------------
 
         function reportAjaxError( event, jqXHR, settings, error )
         {
-            var msg = 'An AJAX error occurred.<br />' +
-                'URL: ' + settings.url + '<br />' +
-                'Response: ' + jqXHR.responseText + '<br />' +
+            var msg = 'An AJAX error occurred.\n' +
+                'URL: ' + settings.url + '\n' +
+                'Response: ' + jqXHR.responseText + '\n' +
                 'Status: ' + jqXHR.statusText;
-            console.log( "AJAX error: " + msg );
-            $(this).html( msg );
-            $(this).show( );
+            reportError( msg );
         };
 
-    //-------------------------------------------------------------------------
+
+    //=========================================================================
+
+        setMessageElement( null ); //initial setup
+
+    //=========================================================================
 
     return {
         setMessageElement: setMessageElement,
