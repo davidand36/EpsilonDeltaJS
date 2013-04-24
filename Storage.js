@@ -25,8 +25,13 @@ var εδ = εδ || { };
      {
     //-------------------------------------------------------------------------
 
-         var db = window.localStorage,
+         var base,
              prefix = "";
+
+         if ( chrome && chrome.storage )
+             base = ChromeStorage( );
+         else
+             base = WebStorage( );
          
     //=========================================================================
 
@@ -41,22 +46,27 @@ var εδ = εδ || { };
          {
              var json = JSON.stringify( value );
              key = prefix + key;
-             db.setItem( key, json );
+             base.set( key, json );
          }
          
     //-------------------------------------------------------------------------
 
-         function get( key )
+         function get( key, callback )
          {
              key = prefix + key;
-             var json = db.getItem( key );
-             try
-             {
-                 return JSON.parse( json );
-             } catch ( exc )
-             {
-                 return null;
-             }
+             base.get( key,
+                       function( json )
+                       {
+                           var val;
+                           try
+                           {
+                               val = JSON.parse( json );
+                           } catch ( exc )
+                           {
+                               val = null;
+                           }
+                           callback( val );
+                       } );
          }
          
     //-------------------------------------------------------------------------
@@ -64,10 +74,94 @@ var εδ = εδ || { };
          function remove( key )
          {
              key = prefix + key;
-             db.removeItem( key );
+             base.remove( key );
          }
          
-    //=========================================================================
+    //*************************************************************************
+
+         function WebStorage( session )
+         {
+             var db = session ? window.sessionStorage : window.localStorage;
+
+         //--------------------------------------------------------------------
+
+             function set( key, value )
+             {
+                 db.setItem( key, value );
+             }
+
+         //--------------------------------------------------------------------
+
+             function get( key, callback )
+             {
+                 var val = db.getItem( key );
+                 callback( val );
+             }
+
+         //--------------------------------------------------------------------
+
+             function remove( key )
+             {
+                 db.removeItem( key );
+             }
+
+         //====================================================================
+
+             return {
+                 set: set,
+                 get: get,
+                 remove: remove
+             };
+         
+         //--------------------------------------------------------------------
+         }
+
+    //*************************************************************************
+
+         function ChromeStorage( sync )
+         {
+             var db = sync ? chrome.storage.sync : chrome.storage.local;
+
+         //--------------------------------------------------------------------
+
+             function set( key, value )
+             {
+                 var obj = {};
+                 obj[ key ] = value;
+                 db.set( obj );
+             }
+
+         //--------------------------------------------------------------------
+
+             function get( key, callback )
+             {
+                 db.get( key,
+                         function( obj )
+                         {
+                             var val = obj[ key ];
+                             callback( val );
+                         } );
+             }
+
+         //--------------------------------------------------------------------
+
+             function remove( key )
+             {
+                 db.remove( key );
+             }
+
+         //====================================================================
+
+             return {
+                 set: set,
+                 get: get,
+                 remove: remove
+             };
+         
+         //--------------------------------------------------------------------
+         }
+
+    //*************************************************************************
 
         return {
             setPrefix: setPrefix,
