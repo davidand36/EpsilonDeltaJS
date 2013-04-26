@@ -28,7 +28,7 @@ var εδ = εδ || { };
          var base,
              prefix = "";
 
-         if ( chrome && chrome.storage )
+         if ( window.chrome && window.chrome.storage )
              base = ChromeStorage( );
          else
              base = WebStorage( );
