@@ -27,8 +27,15 @@
 //*****************************************************************************
 
 
-//Our one global object:
-var εδ = εδ || { };
+if ( typeof global === 'undefined' )
+{
+    var εδ = εδ || { };
+}
+else
+{
+    global.εδ = global.εδ || { };
+    var εδ = global.εδ;
+}
 
 
 //*****************************************************************************
@@ -53,9 +60,27 @@ var εδ = εδ || { };
          
     //=========================================================================
 
+         function realBetween( min, max )
+         {
+             var diff = max - min;
+             return real() * diff  +  min;
+         }
+
+    //-------------------------------------------------------------------------
+
+         function intBetween( min, max )
+         {
+             var diff = max - min;
+             return integer( diff ) + min;
+         }
+
+    //=========================================================================
+
         return {
             real: real,
-            integer: integer
+            integer: integer,
+            realBetween: realBetween,
+            intBetween: intBetween
         };
          
     //-------------------------------------------------------------------------
@@ -120,11 +145,29 @@ var εδ = εδ || { };
          
     //=========================================================================
 
+         function realBetween( min, max )
+         {
+             var diff = max - min;
+             return real() * diff  +  min;
+         }
+
+    //-------------------------------------------------------------------------
+
+         function intBetween( min, max )
+         {
+             var diff = max - min;
+             return integer( diff ) + min;
+         }
+
+    //=========================================================================
+
         return {
             reseed: reseed,
             getSeed: getSeed,
             real: real,
-            integer: integer
+            integer: integer,
+            realBetween: realBetween,
+            intBetween: intBetween
         };
          
     //-------------------------------------------------------------------------
@@ -191,6 +234,22 @@ var εδ = εδ || { };
          
     //=========================================================================
 
+         function realBetween( min, max )
+         {
+             var diff = max - min;
+             return real() * diff  +  min;
+         }
+
+    //-------------------------------------------------------------------------
+
+         function intBetween( min, max )
+         {
+             var diff = max - min;
+             return integer( diff ) + min;
+         }
+
+    //=========================================================================
+
          function test( )
          {
              var s,
@@ -231,6 +290,8 @@ var εδ = εδ || { };
             setRng: setRng,
             real: real,
             integer: integer,
+            realBetween: realBetween,
+            intBetween: intBetween,
             test: test
         };
          

@@ -17,7 +17,15 @@
 //*****************************************************************************
 
 
-var εδ = εδ || { };
+if ( typeof global === 'undefined' )
+{
+    var εδ = εδ || { };
+}
+else
+{
+    global.εδ = global.εδ || { };
+    var εδ = global.εδ;
+}
 εδ.util = εδ.util || { };
 
 
@@ -26,8 +34,15 @@ var εδ = εδ || { };
 εδ.util.baseUrl =
     (function( )
      {
-         var curPath = location.pathname;
-         return curPath.substring( 0, curPath.indexOf( "/", 1 ) + 1 );
+         if ( typeof location !== 'undefined' )
+         {
+             var curPath = location.pathname;
+             return curPath.substring( 0, curPath.indexOf( "/", 1 ) + 1 );
+         }
+         else
+         {
+             return null;
+         }
      })();
 
 //=============================================================================
