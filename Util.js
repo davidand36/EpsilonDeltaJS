@@ -67,6 +67,13 @@ else
 
 //=============================================================================
 
+εδ.util.isArray = function( obj )
+{
+    return Object.prototype.toString.apply( obj ) === '[object Array]';
+}
+
+//=============================================================================
+
 εδ.util.reflectAsHtml = function ( item, depth )
 {
     var recursionLimit = 3;
@@ -87,7 +94,7 @@ else
         return '(function)';
     if ( typeof item === 'object' )
     {
-        if ( Object.prototype.toString.apply( item ) === '[object Array]' )
+        if ( εδ.util.isArray( item ) )
         {
             var html = '<ol>\n';
             var i;
